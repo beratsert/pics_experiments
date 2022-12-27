@@ -1,0 +1,171 @@
+# A.  Simulation Configuration
+# A.1 Sim Trace Interval (e.g. every 60 sec)
+SIM_TRACE_INTERVAL=60
+
+# A.2 Workload File Path
+WORK_LOAD_FILE=workload3.csv
+
+# A.3 VM Configuration Path
+VM_CONFIG_FILE=vm_config.txt
+
+# B.  Public IaaS Configuration
+# B.1 VM Billing Config - Set IaaS Pricing Model (Hour or Min-based)
+VM_BILLING_TIME_UNIT=BTU_HOUR
+# BTU_HOUR: Hourly Billing Model   (e.g. Amazon Web Services)
+# BTU_MIN : Minutely Billing Model (e.g. MS Azure & Google Compute Engine)
+
+# B.1 VM Billing Conf - Set Billing Time Period (Int and > 0)
+VM_BILLING_TIME_PERIOD=1
+
+# IaaS Billing Model = VM_BILLING_TIME_UNIT * VM_BILLING_TIME_PERIOD=1
+# e.g. VM_BILLING_TIME_UNIT=BTU_MIN and VM_BILLING_TIME_PERIOD=30
+# --> 30min based billing
+# Note that Unit Cost($) for each VM is defined at VM_CONFIG_FILE
+
+# B.2 VM Startup Delay (Lagtime) - Min Startup LagTime for Creating a new VM
+MIN_STARTUP_LAG=30
+
+# B.2 VM Startup Delay (Lagtime) - Max Startup LagTime for Creating a new VM
+MAX_STARTUP_LAG=60
+
+# PICS determines startup lagtime for creating a new VM
+#      from MIN_STARTUP_LAG (>=0) to MAX_STARTUP_LAG (>=0)
+#      (MAX_STARTUP_LAG >= MIN_STARTUP_LAG)
+
+# C.  Cloud Storage Configurations
+# C.1 Max Volumn of Cloud Storage
+#     Unit: Mega Bytes
+MAX_CAPACITY_OF_STORAGE=10240000
+# C.2 Storage Usage Cost ($) for Gigabytes/Month
+#     STORAGE_UNIT_COST > 0
+STORAGE_UNIT_COST=0.1
+
+# C.3 Storage Billing Time Unit (Second, > 0)
+#     1      : 1sec
+#     60     : 1 min
+#     3600   : 1 Hour
+#     86400  : 1 Day
+#     2592000: 1 Month 
+STORAGE_BILLING_TIME_UNIT=1
+
+# D.  Network Configuration 
+
+# D.1 Network Bandwidth for Data Transfer (Unit: MB/s)
+# D.1.1 Bandwidth from Cloud to Cloud
+PERF_DATA_TRANSFER_CLOUD=3.0
+# D.1.2 Bandwidth from Incoming Traffic
+PERF_DATA_TRANSFER_IN=2.0
+# D.1.3 Bandwidth for Outgoing Traffic
+PERF_DATA_TRANSFER_OUT=1.0
+
+# D.2 Network Cost for Data Transfer (Unit:$)
+# D.2.1 Network Cost from Cloud to Cloud
+COST_DATA_TRANSFER_CLOUD=0.01
+# D.2.2 Network Cost for Incmoing Traffic
+COST_DATA_TRANSFER_IN=0.02
+# D.2.3 Network Cost for Outgoing Traffic
+COST_DATA_TRANSFER_OUT=0.03
+
+# E.  Job Management Configurations
+
+# E.1 Job Scheduling Configuration
+JOB_ASSIGNMENT_POLICY=EDF
+
+# E.2 Job Failure Configurations
+# E.2.1 Probability for Job Failure Occurance
+#       0 <= PROB_JOB_FAILURE <= 1
+#       e.g. 0.05: 5%
+PROB_JOB_FAILURE=0.05
+
+# E.3 Job Failure Recovery Policy
+#     JF-POLICY-01: ignore the failed job
+#     JF-POLICY-02: re-execute the failed job
+#     JF-POLICY-03: move the failed job to end of the job queue
+#     JF-POLICY-04: find another VM (running or new) to satisfy
+#                   the failed job deadline
+JOB_FAILURE_POLICY=JF-POLICY-01
+
+# F.  VM Management Configuration
+# F.1 VM Selection Policy for VM Scaling-up
+#     VM-SEL-COST     : Cost based VM Selection
+#     VM-SEL-PERF     : Performance based VM Selection
+#     VM-SEL-COSTPERF : Cost/Performance Balanced VM Selection
+VM_SELECTION_METHOD=VM-SEL-COST
+
+# F.2 Max Num of Concurrent VMs
+#     MAX_NUM_OF_CONCURRENT_VMS is
+#     > 0 or UNLIMITED
+MAX_NUM_OF_CONCURRENT_VMS=5
+
+# F.3 VM Scale Down Policy
+# SD-IM             : Immediate VM Scale-down when the VM is idle
+# SD-HR             : Hourly Billing Model-based Scale-Down (e.g. AWS)
+# SD-MN             : Minutely Billing Model-based Scale-Down (e.g. MS Azure)
+# SD-SL             : Startup-Lag based Scale-Down
+# SD-JAT-MEAN       : Mean Job Arrival Rate-based Scale Down
+# SD-JAT-MAX        : Maximum Job Arrival Rate-based Scale Down
+# SD-JAT-MEAN-RECENT: Mean Recent Job Arrival Rate-based Scale Down (kNN)
+# SD-JAT-MAX-RECENT : Max Recent Job Arrival Rate-based Scale Down
+# SD-JAT-SLR        : Simple Linear Regression (JAT)-based Scale Down
+# SD-JAT-2PR        : Quadratic Regression (JAT)-based Scale Down
+# SD-JAT-3PR        : Qubic Regression (JAT)-based Scale Down
+# SD-JAT-LLR        : Local Linear Regression (JAT)-based Scale Down
+# SD-JAT-L2PR       : Local Quadratic Regression (JAT)-based Scale Down
+# SD-JAT-L3PR       : Local Qubic Regression (JAT)-based Scale Down
+# SD-JAT-WMA        : Weighted Moving Average (JAT)-based Scale Down
+# SD-JAT-ES         : Exponential Smoothong (JAT)-based Scale Down
+# SD-JAT-HWDES      : Holt-Winters Double Exponential Smoothing (JAT)-based
+# SD-JAT-BRDES      : Brown's Double Exponential Smoothing (JAT)-based
+# SD-JAT-AR         : Autoregressive-based Scale Down
+# SD-JAT-ARMA       : Autoregressive and Moving Average-based Scale Down
+# SD-JAT-ARIMA      : Autoregressive Integrated Moving Average-based
+VM_SCALE_DOWN_POLICY_NAME=SD-IM
+
+# F.4 VM Scale Down Policy Unit
+#     This configuration is only applicable for
+#     billing model based Scale Down
+#     (e.g. SL-HR and SL-MN)
+#     e.g. VM_SCALE_DOWN_POLICY_NAME=SD-MN and VM_SCALE_DOWN_POLICY_UNIT=10
+#          --> 10 min based Scale Down
+VM_SCALE_DOWN_POLICY_UNIT=1
+
+# F.5 Num of Recent Sample for SD Policies
+#     This configuration is applicable for RECENT-based SD policies.
+#     (e.g. SD-JAT-*-RECENT)
+VM_SCALE_DOWN_POLICY_RECENT_SAMPLE_CNT=50
+
+# F.6 First Parameter for Timeseries.
+#     alpha for WMA, ES, HWDES, BRDES: 0 < alpha < 1
+#     p for AR, ARMA, ARIMA (p >= 0)
+VM_SCALE_DOWN_POLICY_PARAM1=0.5
+
+# F.7 Second Parameter for Timeseries.
+#     beta for HWDES (0 < beta < 1)
+#     q for ARMA and ARIMA (q >= 0)
+VM_SCALE_DOWN_POLICY_PARAM2=0.5
+
+# F.8 Third Parameter for Timeseries.
+#     d for ARIMA (d >= 0)
+VM_SCALE_DOWN_POLICY_PARAM3=2
+
+# F.9 MIN/MAX for Wait Time of VM Scale Down
+# These MIN/MAX fields are related to predictive methods such as SD-JAT-SLR.
+# To handle wrong prediction results
+# --> too short (or negative) or too long wait time
+VM_SCALE_DOWN_POLICY_MIN_WAIT_TIME=1
+VM_SCALE_DOWN_POLICY_MAX_WAIT_TIME=UNLIMITED
+
+# F.10 Vertical Scaling
+#      Vertical Scaling - Enable: YES, Disable: No
+#      When enabling Verticaling, MAX_NUM_OF_CONCURRENT_VMS
+#      shouldn't be UNLIMITED
+ENABLE_VERTICAL_SCALING=NO
+
+# F.11 Vertical Scaling Operation
+# VSCALE-UP   : Only VScale-up
+#               (triggered when VM cannot meet deadline for queued jobs)
+# VSCALE-DOWN : Only VScale-down
+#               (triggered  when VM meets deadline - find most suitable one
+#               for queued jobs (e.g. cheapest VM with deadline satisfaction)
+# VSCALE-BOTH : Both VScale-up/down
+VERTICAL_SCALING_OPERATION=VSCALE-BOTH

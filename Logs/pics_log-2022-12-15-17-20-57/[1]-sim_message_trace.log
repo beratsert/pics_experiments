@@ -1,0 +1,6 @@
+60	create make_queue_event
+60	Caller   : register_broker_sim_trace_event, /mnt/c/Users/berat/OneDrive/Masaüstü/PICS/sim_entity_cloudbroker.py:2333
+60	EVT ID   : 1
+60	EVT CLK  : 60
+60	EVT SRC  : BLOCK_BROKER (6)
+60	EVT DST  : BLOCK_SIM_EVENT_HANDLER (3)
